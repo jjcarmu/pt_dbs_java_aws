@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'BTG Pactual - Despliegue de API REST de Fondos en EC2 con Docker'
+
+Parameters:
+  InstanceType:
+    Description: Tipo de instancia EC2 para el despliegue.
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - t3.micro
+      - t3.small
+
+Resources:
+  # 1. Grupo de Seguridad (Firewall)
+  BtgSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Habilitar acceso HTTP al puerto 8080 (Spring Boot) y 22 (SSH)
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+  # 2. Instancia EC2 (Servidor)
+  BtgBackendInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: ami-0c55b159cbfafe1f0 # Amazon Linux 2 AMI (us-east-2) - Ajustar segun tu region
+      SecurityGroups:
+        - !Ref BtgSecurityGroup
+      Tags:
+        - Key: Name
+          Value: BTG-Fondos-Backend
+      # Script de inicialización (Instala Docker, clona tu repo/imagen y lo ejecuta)
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          amazon-linux-extras install docker -y
+          service docker start
+          usermod -a -G docker ec2-user
+          chkconfig docker on
+          curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
+          
+          # Aquí irían los comandos para descargar tu imagen de Spring Boot y levantar el docker-compose.yml
+          # Ejemplo: 
+          # mkdir /app && cd /app
+          # wget [URL_RAW_DE_TU_DOCKER_COMPOSE]
+          # docker-compose up -d
+
+Outputs:
+  ApiUrl:
+    Description: "URL pública para acceder a la API de Fondos BTG"
+    Value: !Sub "http://${BtgBackendInstance.PublicDnsName}:8080/api/v1/clientes/cliente-prueba-001/fondos/transacciones"

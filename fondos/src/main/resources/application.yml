@@ -1,0 +1,4 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://admin:pass@localhost:27017/btg_fondos_db?authSource=admin
