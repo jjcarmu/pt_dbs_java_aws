@@ -130,3 +130,4 @@ La plantilla `cloudformation-template.yaml` aprovisiona una instancia Amazon EC2
 7. Haz clic en **Siguiente** hasta llegar a la pantalla final y presiona **Enviar (Submit)**.
 8. Espera a que el estado de la pila cambie a `CREATE_COMPLETE`.
 9. Ve a la pestaña **Salidas (Outputs)** de la pila. Allí encontrarás la clave `ApiUrl` con el enlace público para probar los endpoints de la API desplegada.
+10
