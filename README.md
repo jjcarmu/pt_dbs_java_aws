@@ -1,4 +1,4 @@
-# pt_dbs_java_aws
+# pt_dbs_java_aws.
 # Prueba Técnica: PS 027 - Desarrollador Backend Senior (Java/AWS) - Jhon Javier Cardona
 
 Descripción breve de la solución, arquitectura limpia utilizada (Spring Boot + MongoDB) y patrones aplicados.
