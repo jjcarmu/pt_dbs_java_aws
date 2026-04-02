@@ -5,6 +5,7 @@ import com.btg.fondos.domain.model.Fondo;
 import com.btg.fondos.domain.model.Transaccion;
 import com.btg.fondos.domain.port.ClienteRepository;
 import com.btg.fondos.domain.port.FondoRepository;
+import com.btg.fondos.domain.port.NotificacionPort;
 import com.btg.fondos.domain.port.TransaccionRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -44,9 +45,9 @@ public class AdministracionFondosService {
         transaccionRepository.save(transaccion);
 
         //Enviar Notificación según preferencia
-        NotificacionPort notificador = notificacionFactory.obtenerEstrategia(cliente.getPreferenciaNotificacion());
-        String mensaje = String.format("Hola %s, te has suscrito exitosamente al fondo %s.", cliente.getNombre(), fondo.getNombre());
-        notificador.enviar(cliente.getId(), mensaje);
+        //NotificacionPort notificador = notificacionFactory.obtenerEstrategia(cliente.getPreferenciaNotificacion());
+        //String mensaje = String.format("Hola %s, te has suscrito exitosamente al fondo %s.", cliente.getNombre(), fondo.getNombre());
+        //notificador.enviar(cliente.getId(), mensaje);
     }
 
     @Transactional

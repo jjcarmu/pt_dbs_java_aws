@@ -1,11 +1,13 @@
 package com.btg.fondos.domain.model;
 
 import com.btg.fondos.domain.exception.SaldoInsuficienteException;
+import lombok.Builder;
 import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Builder
 public class Cliente {
     private String id;
     private String nombre;

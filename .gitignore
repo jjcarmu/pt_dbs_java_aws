@@ -1,0 +1,62 @@
+### --- SECRETOS Y CONFIGURACIÓN ---
+# Ignorar el archivo de variables de entorno (CRUCIAL)
+.env
+.env.local
+.env.stack
+
+### --- JAVA (Maven) ---
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+### --- JAVA (Gradle) ---
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+### --- DOCKER ---
+# Ignorar datos persistentes de la base de datos si los guardas en una carpeta local
+# (Ejemplo: si en tu docker-compose mapeaste ./data:/data/db)
+data/
+db_data/
+
+### --- IDEs (VS Code, IntelliJ, Eclipse) ---
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+bin/
+.DS_Store
+
+### --- SPRING BOOT & JAVA ---
+# Archivos de compilación de Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+# Si usas el Maven Wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+
+### --- LOGS Y TEMPORALES ---
+/logs/*
+/tmp/*
+*.log
+logs/
+*.gz
+
+### --- CONFIGURACIÓN LOCAL ---
+# Muy importante para Spring Boot si usas archivos de propiedades específicos
+application-local.properties
+application-dev.properties
+# Si usas archivos YAML
+application-local.yml
+application-dev.yml

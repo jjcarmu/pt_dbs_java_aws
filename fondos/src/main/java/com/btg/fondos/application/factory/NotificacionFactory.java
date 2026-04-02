@@ -13,7 +13,6 @@ public class NotificacionFactory {
 
     private final Map<String, NotificacionPort> estrategias;
 
-    // Spring inyecta automáticamente todas las clases que implementen NotificacionPort
     public NotificacionFactory(List<NotificacionPort> notificadores) {
         this.estrategias = notificadores.stream()
                 .collect(Collectors.toMap(NotificacionPort::getTipo, Function.identity()));
