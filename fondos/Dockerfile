@@ -3,11 +3,11 @@ FROM maven:3.8.7-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # Copiar el pom.xml y descargar dependencias (esto optimiza el cache de Docker)
-COPY fondos/pom.xml .
+COPY pom.xml .
 RUN mvn dependency:go-offline
 
 # Copiar el código fuente y compilar el proyecto
-COPY fondos/src ./src
+COPY src ./src
 RUN mvn clean package -DskipTests
 
 # --- ETAPA 2: Imagen Final (Runtime) ---

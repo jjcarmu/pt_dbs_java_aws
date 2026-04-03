@@ -1,5 +1,5 @@
 db = db.getSiblingDB("btg_test");
-db.createCollection("init");
+db.createCollection("btg_test");
 
 db.createUser(
         {
@@ -8,7 +8,7 @@ db.createUser(
             roles: [
                 {
                     role: "readWrite",
-                    db: "company"
+                    db: "btg_test"
                 }
             ]
         }

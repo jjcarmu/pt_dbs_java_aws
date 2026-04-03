@@ -1,10 +1,10 @@
 package com.btg.fondos.domain.model;
 
-import lombok.Builder;
+//import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
+//@Builder
 public class Fondo {
     private String id;
     private String nombre;

@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class FondosApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FondosApplication.class, args);
+        SpringApplication.run(FondosApplication.class, args);
 	}
 
 }

@@ -5,6 +5,7 @@ import com.btg.fondos.domain.model.Fondo;
 import com.btg.fondos.domain.model.Transaccion;
 import com.btg.fondos.domain.port.ClienteRepository;
 import com.btg.fondos.domain.port.FondoRepository;
+import com.btg.fondos.application.factory.NotificacionFactory;
 import com.btg.fondos.domain.port.NotificacionPort;
 import com.btg.fondos.domain.port.TransaccionRepository;
 
@@ -21,6 +22,7 @@ public class AdministracionFondosService {
     private final ClienteRepository clienteRepository;
     private final FondoRepository fondoRepository;
     private final TransaccionRepository transaccionRepository;
+    private final NotificacionFactory notificacionFactory;
 
     @Transactional
     public void suscribirFondo(String clienteId, String fondoId) {
@@ -45,9 +47,9 @@ public class AdministracionFondosService {
         transaccionRepository.save(transaccion);
 
         //Enviar Notificación según preferencia
-        //NotificacionPort notificador = notificacionFactory.obtenerEstrategia(cliente.getPreferenciaNotificacion());
-        //String mensaje = String.format("Hola %s, te has suscrito exitosamente al fondo %s.", cliente.getNombre(), fondo.getNombre());
-        //notificador.enviar(cliente.getId(), mensaje);
+        NotificacionPort notificador = notificacionFactory.obtenerEstrategia(cliente.getPreferenciaNotificacion());
+        String mensaje = String.format("Hola %s, te has suscrito exitosamente al fondo %s.", cliente.getNombre(), fondo.getNombre());
+        notificador.enviar(cliente.getId(), mensaje);
     }
 
     @Transactional

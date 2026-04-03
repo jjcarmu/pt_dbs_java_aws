@@ -1,6 +1,6 @@
 ### --- SECRETOS Y CONFIGURACIÓN ---
 # Ignorar el archivo de variables de entorno (CRUCIAL)
-.env
+fondos/.env
 .env.local
 .env.stack
 
@@ -45,7 +45,6 @@ buildNumber.properties
 # Si usas el Maven Wrapper
 .mvn/wrapper/maven-wrapper.jar
 
-
 ### --- LOGS Y TEMPORALES ---
 /logs/*
 /tmp/*
@@ -57,6 +56,8 @@ logs/
 # Muy importante para Spring Boot si usas archivos de propiedades específicos
 application-local.properties
 application-dev.properties
+application-prod.properties
 # Si usas archivos YAML
 application-local.yml
 application-dev.yml
+application-prod.yml
