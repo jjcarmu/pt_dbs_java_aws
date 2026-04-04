@@ -163,22 +163,19 @@ categoria: 'FPV'
     *    Buenas prácticas de seguridad y mantenibilidad.; Con respecto a seguridad y mantenibilidad, el seccion **Mejoras Futuras** se habla de luego implementar JWT, con el fin de tener mayor seguridad en los endpoints para un ambiente productivo, también la implementación del monitoreo que ayudaria a detectar posibles fallos, en general al utiizar una arquitectura hexagonal-based y clean code, ayuda a facilitar el mantenimiento del código.
 
   * **5. Despliegue:** Para el despliegue, se puede realizar en diversos modos, pensando en un ambiente local para un desarrollador, un ambiente completamente dockerized para un equipo de pruebas, y el ambiente en una nube para producción.
-      *    Local; Para este despliegue, se requiere tener instalado en el equipo lo siguiente;  java, maven, docker, docker compose, y tener un entorno linux. Aquí mediante docker se levanta el mongo, y en el equipo local se levanta la aplicación api.
+      *    **Local**; Para este despliegue, se requiere tener instalado en el equipo lo siguiente;  java, maven, docker, docker compose, y tener un entorno linux. Aquí mediante docker se levanta el mongo, y en el equipo local se levanta la aplicación api.
            * Forma manual. 
              * 1. Se debe primero realizar las configuraciones iniciales para conexión de base de datos (MongoDB), apartir del archivo [.env.example](fondos/.env.example), se debe crear el archivo **.env**, con este se configura el [docker-compose.yml](fondos/docker-compose.yml), para la creacion del contenedor que contiene la base de datos de MongoDB, para el caso practico se recomienda usar el contenido de **.env.example**.
              Copiar el contenido del archivo [docker-compose.yml.host](fondos/docker-compose.yml.host) en [docker-compose.yml](fondos/docker-compose.yml)], aqui se elimina la creación del contenedor que contiene la aplicación del API (**app-java**).
              * 2. Se debe abrir la terminal y ejecutar los siguientes comandos, parado desde la raiz del repositorio:
                * Ingreso al directorio del proyecto y arrancar el contenedor con mongodb y mongo-express.  
                   ```bash
-                 cd fondos/
-                 docker-compose up -d
+                 cd fondos && docker-compose up -d
                  ```
                * Se debe crear el archivo [applicacion-dev.properties](fondos/src/main/resources/application-dev.properties), copiando el contenido del archivo [applicacion-dev.properties.host](fondos/src/main/resources/application-dev.properties.host), esta es la configuración para la conexión de la aplicación api con la base de datos y el modo DEBUG.
-               * Ejecucion del API, se explica en **Configuración y Ejecución de la API**, se deben ejecutar los siguientes comandos, desde la carpeta del proyecto *(fondos)*.
+               * Ejecucion del API, se explica en **Configuración y Ejecución de la API**, se deben ejecutar los siguientes comandos, desde el directorio raiz del repositorio.
                   ```bash
-                 cd fondos/
-                 ./mvnw clean install
-                 ./mvnw spring-boot:run
+                 cd fondos && ./mvnw clean install && ./mvnw spring-boot:run
                  ```
              * 3. Verificar el funcionamiento del API, ver punto *Documentación de la API (Swagger)* o desde Postman importando el archivo [pruebas_funcionales.postman_collection.json](pruebas_funcionales.postman_collection.json).                 
            * Mediante Script bash [install.sh](install.sh), el cual contiene todos los pasos anteriores.
@@ -186,18 +183,17 @@ categoria: 'FPV'
                 sh ./install.sh
                 ```
               * Verificar el funcionamiento del API, ver punto *Documentación de la API (Swagger)* o desde Postman importando el archivo [pruebas_funcionales.postman_collection.json](pruebas_funcionales.postman_collection.json).
-      *    Dockerized; Para este despliegue, se requiere tener instalado en el equipo local docker y docker compose, y tener un entorno linux. Aquí mediante docker-compose se levanta 3 contenedores, con mongoDB, mongo-express y la aplicación con el API.
+      *    **Dockerized**; Para este despliegue, se requiere tener instalado en el equipo local docker y docker compose, y tener un entorno linux. Aquí mediante docker-compose se levanta 3 contenedores, con mongoDB, mongo-express y la aplicación con el API.
            * 1. Se debe primero realizar las configuraciones iniciales para conexión de base de datos (MongoDB), apartir del archivo [.env.example](fondos/.env.example), se debe crear el archivo **.env**, con este se configura el [docker-compose.yml](fondos/docker-compose.yml), para la creacion del contenedor que contiene la base de datos de MongoDB, para el caso práctico se recomienda usar el contenido de **.env.example**.
-               Copiar el contenido del archivo [docker-compose.yml.docker](fondos/docker-compose.yml.docker) en [docker-compose.yml](fondos/docker-compose.yml), aqui se elimina la creación del contenedor que contiene la aplicación del API (**app-java**).
+               Copiar el contenido del archivo [docker-compose.yml.docker](fondos/docker-compose.yml.docker) en [docker-compose.yml](fondos/docker-compose.yml), Aquí se crea los 3 contenedores.
            * 2. Se debe crear el archivo [applicacion-dev.properties](fondos/src/main/resources/application-dev.properties), copiando el contenido del archivo [applicacion-dev.properties.docker](fondos/src/main/resources/application-dev.properties.docker), esta es la configuración para la conexión de la aplicación api con la base de datos y el modo DEBUG.
            * 3. Se debe abrir la terminal y ejecutar los siguientes comandos, parado desde la raiz del repositorio: 
              * Ejecucion del docker-compose
                ```bash
-               cd fondos/
-               docker-compose up -d --build
+               cd fondos && docker-compose up -d --build
                ```
            * 4. Verificar el funcionamiento del API, ver punto *Documentación de la API (Swagger)* o desde Postman importando el archivo [pruebas_funcionales.postman_collection.json](pruebas_funcionales.postman_collection.json).    
-      *    AWS CloudFormation; .
+      *    **AWS CloudFormation**;
            * La plantilla `cloudformation-template.yaml` aprovisiona una instancia Amazon EC2 (`t2.micro` por defecto para capa gratuita) configurada con un *Security Group* que expone el puerto 8080 para la API REST. Además, utiliza `UserData` para instalar automáticamente el motor de Docker y Docker Compose en el arranque del servidor.
              * Pasos para el despliegue:
                * 1. Inicia sesión en la **Consola de Administración de AWS**.
