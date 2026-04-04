@@ -11,9 +11,9 @@ import com.btg.fondos.domain.port.TransaccionRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +24,8 @@ public class AdministracionFondosService {
     private final TransaccionRepository transaccionRepository;
     private final NotificacionFactory notificacionFactory;
 
-    @Transactional
+    // Se remueve @Transactional para permitir ejecución en MongoDB Standalone (Docker simple)
+    // El bloqueo optimista (@Version) igual protege la concurrencia.
     public void suscribirFondo(String clienteId, String fondoId) {
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
@@ -52,12 +53,19 @@ public class AdministracionFondosService {
         notificador.enviar(cliente.getId(), mensaje);
     }
 
-    @Transactional
+    // Se remueve @Transactional para permitir ejecución en MongoDB Standalone (Docker simple)
     public void cancelarFondo(String clienteId, String fondoId) {
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
         Fondo fondo = fondoRepository.findById(fondoId)
                 .orElseThrow(() -> new IllegalArgumentException("Fondo no encontrado"));
+
+        cliente.getFondosSuscritos().stream()
+                .filter(s -> {
+                    return s.equals(fondo.getId());
+                })
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(String.format("El cliente %s, no tiene suscrito el fondo %s.", cliente.getNombre(), fondo.getNombre())));
 
         // 1. Validar reglas de negocio y devolver saldo (Delegado a la entidad)
         cliente.desvincular(fondo);
@@ -77,5 +85,13 @@ public class AdministracionFondosService {
 
     public List<Transaccion> obtenerHistorial(String clienteId) {
         return transaccionRepository.findByClienteId(clienteId);
+    }
+
+    public List<Cliente> getAllClientes() {
+        return clienteRepository.getAllClientes();
+    }
+
+    public Optional<Cliente> getClienteById(String clienteId) {
+        return clienteRepository.findById(clienteId);
     }
 }

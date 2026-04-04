@@ -19,25 +19,28 @@ db.createCollection("fondo");
 // Insertar datos iniciales de Clientes (Alineado con Cliente.java)
 db.cliente.insertMany([
     {
-        _id: ObjectId().toString(),
+        _id: "1000000001",
         nombre: "Juan Perez",
         saldoDisponible: 500000.0,
         preferenciaNotificacion: "EMAIL",
-        fondosSuscritos: []
+        fondosSuscritos: [],
+        version: NumberLong(0)
     },
     {
-        _id: ObjectId().toString(),
+        _id: "1000000002",
         nombre: "Maria Rodriguez",
-        saldoDisponible: 1500000.0,
+        saldoDisponible: 500000.0,
         preferenciaNotificacion: "SMS",
-        fondosSuscritos: []
+        fondosSuscritos: [],
+        version: NumberLong(0)
     },
     {
-        _id: ObjectId().toString(),
+        _id: "1000000003",
         nombre: "Carlos Gomez",
-        saldoDisponible: 100000.0,
+        saldoDisponible: 500000.0,
         preferenciaNotificacion: "EMAIL",
-        fondosSuscritos: []
+        fondosSuscritos: [],
+        version: NumberLong(0)
     }
 ]);
 

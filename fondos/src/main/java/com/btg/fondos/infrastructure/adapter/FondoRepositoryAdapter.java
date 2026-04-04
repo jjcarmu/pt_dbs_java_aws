@@ -25,8 +25,11 @@ public class FondoRepositoryAdapter implements FondoRepository {
 
     @Override
     public Fondo save(Fondo fondo) {
-        return null;
+        return mongoRepository.save(fondo);
     }
 
-    // Si tienes otros métodos en la interfaz FondoRepository, impleméntalos aquí
+    @Override
+    public void deleteById(String fondoId) {
+        mongoRepository.deleteById(fondoId);
+    }
 }
