@@ -1,0 +1,4 @@
+# MongoDB configuration using URI. en una instancia local.
+spring.data.mongodb.uri=mongodb://btg_test:password@localhost:27017/btg_test?authSource=btg_test
+# Mostrar los queries en la consola (util para debug en btg_test)
+logging.level.org.springframework.data.mongodb.core.MongoTemplate=DEBUG

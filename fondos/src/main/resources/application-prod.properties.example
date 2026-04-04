@@ -1,0 +1,2 @@
+#Configuracion de conexion a MongoDB
+spring.data.mongodb.uri=mongodb://user:password@xxxxxx:27017/database?authSource=admin
