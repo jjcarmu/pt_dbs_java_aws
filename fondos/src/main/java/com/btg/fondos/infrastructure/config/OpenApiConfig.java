@@ -17,7 +17,7 @@ public class OpenApiConfig {
                         .version("1.0")
                         .description("Documentación de la API REST para la prueba técnica de Backend.")
                         .contact(new Contact()
-                                .name("Tu Nombre")
-                                .email("tu.correo@ejemplo.com")));
+                                .name("Jhon Javier Cardona Muñoz")
+                                .email("jhonjcm2@egmail.com")));
     }
 }
