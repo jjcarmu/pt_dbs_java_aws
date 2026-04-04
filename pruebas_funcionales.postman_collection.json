@@ -1,0 +1,322 @@
+{
+	"info": {
+		"_postman_id": "c38e4f66-9daa-480a-b257-a5791660f5fa",
+		"name": "Pruebas funcionales",
+		"description": "# About this collection\n\nThis collection helps you set up contract tests to ensure that two separate systems are compatible and can communicate with one another.\n\n## **Using the collection**\n\n**Step 1:** Send the sample requests and view the response and test results.\n\n**Step 2:** Replace the sample request URLs with your desired API endpoints.\n\n**Step 3:** Customize the tests in the \"Tests\" tab if needed. Don't forget to save your changes.\n\n### Resources\n\n[Scripting in Postman](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/)\n\n[Test script examples](https://learning.postman.com/docs/writing-scripts/script-references/test-examples/)\n\n[Postman Sandbox API reference](https://learning.postman.com/docs/sending-requests/grpc/postman-sandbox-api/#writing-assertions)\n\n[Using the Collection Runner](https://learning.postman.com/docs/collections/running-collections/intro-to-collection-runs/)\n\n[  \n](https://postman.postman.co/documentation/24552533-5bead607-0197-4e1d-87d4-3160bc7631c1?entity=&branch=&version=)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Transacciones",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "964459dd-6a67-41af-a85e-0cddf8f810a8",
+						"exec": [
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseIp}}/btg/api/v1/clientes/{{clienteId}}/fondos/transacciones",
+					"host": [
+						"{{baseIp}}"
+					],
+					"path": [
+						"btg",
+						"api",
+						"v1",
+						"clientes",
+						"{{clienteId}}",
+						"fondos",
+						"transacciones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Clientes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "964459dd-6a67-41af-a85e-0cddf8f810a8",
+						"exec": [
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseIp}}/btg/api/v1/clientes/all",
+					"host": [
+						"{{baseIp}}"
+					],
+					"path": [
+						"btg",
+						"api",
+						"v1",
+						"clientes",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ClienteById",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "964459dd-6a67-41af-a85e-0cddf8f810a8",
+						"exec": [
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseIp}}/btg/api/v1/clientes/1000000001/id",
+					"host": [
+						"{{baseIp}}"
+					],
+					"path": [
+						"btg",
+						"api",
+						"v1",
+						"clientes",
+						"1000000001",
+						"id"
+					]
+				},
+				"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+			},
+			"response": []
+		},
+		{
+			"name": "suscribir",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3f9902a9-237f-4c83-94b7-a3dbde17396a",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"fondoId\" : \"1\"\n}",
+					"options": {
+						"formdata": {},
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseIp}}/btg/api/v1/clientes/{{clienteId}}/fondos/suscribir",
+					"host": [
+						"{{baseIp}}"
+					],
+					"path": [
+						"btg",
+						"api",
+						"v1",
+						"clientes",
+						"{{clienteId}}",
+						"fondos",
+						"suscribir"
+					]
+				},
+				"description": "The tests in this request validate that the request body sent as form-data is valid."
+			},
+			"response": []
+		},
+		{
+			"name": "cancelar",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3f9902a9-237f-4c83-94b7-a3dbde17396a",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"fondoId\" : \"1\"\n}",
+					"options": {
+						"formdata": {},
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseIp}}/btg/api/v1/clientes/{{clienteId}}/fondos/cancelar",
+					"host": [
+						"{{baseIp}}"
+					],
+					"path": [
+						"btg",
+						"api",
+						"v1",
+						"clientes",
+						"{{clienteId}}",
+						"fondos",
+						"cancelar"
+					]
+				},
+				"description": "The tests in this request validate that the request body sent as form-data is valid."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "da4c3984-fd70-4b38-825d-657ac198bdb4",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "9cad75ad-3305-406b-a7a8-1170cf6ebce3",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "5f6a333d-2c99-4a87-8af5-82be794b7143",
+			"key": "baseUrl",
+			"value": "http://localhost:8086/btg/api/v1/clientes/",
+			"type": "string"
+		},
+		{
+			"id": "8cb9264f-bd04-4f92-a933-3c22b0a5bdfd",
+			"key": "baseIp",
+			"value": "http://localhost:8086",
+			"type": "string"
+		},
+		{
+			"id": "3d1c182f-54f2-42ad-a260-bca392cb2d0e",
+			"key": "clienteId",
+			"value": "1000000001",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

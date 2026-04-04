@@ -1,133 +1,100 @@
-# pt_dbs_java_aws.
-# Prueba Técnica: PS 027 - Desarrollador Backend Senior (Java/AWS) - Jhon Javier Cardona
+# Prueba Técnica - Ingeniero de Desarrollo Back End (BTG Pactual) - Jhon Javier Cardona Muñoz
+# BTG Pactual - Sistema de Administración de Fondos
 
-Descripción breve de la solución, arquitectura limpia utilizada (Spring Boot + MongoDB) y patrones aplicados.
+Esta es una API RESTful desarrollada en **Java 17** con **Spring Boot 3.2.x** y **MongoDB**, diseñada siguiendo los principios de **Arquitectura Limpia (Hexagonal)** para gestionar la vinculación y cancelación de fondos de inversión por parte de los clientes.
 
-## 1. Requisitos Previos
-* Java 17 (o la versión que uses)
-* Maven
-* Docker y Docker Compose instalados.
+## 🚀 Tecnologías y Herramientas
 
-## 2. Levantar la Base de Datos (Entorno Local)
-Para ejecutar la aplicación localmente, primero debemos levantar los contenedores de MongoDB y Mongo Express. En la raíz del proyecto, ejecuta el siguiente comando:
+*   **Java 17**
+*   **Spring Boot 3.2.5**: Framework principal.
+*   **Spring Data MongoDB**: Integración con la base de datos NoSQL.
+*   **Lombok**: Reducción de código boilerplate (getters, setters, constructores).
+*   **SpringDoc OpenAPI (Swagger UI)**: Documentación interactiva de la API.
+*   **Docker & Docker Compose**: Contenerización de la base de datos MongoDB y Mongo Express.
+*   **JUnit 5 & Spring Boot Test**: Pruebas unitarias y de integración.
 
-    ```bash
-    docker-compose up -d
+---
 
+## 🏗️ Arquitectura Limpia (Clean Architecture)
 
-## 1 - Tecnologías Escogidas
+El proyecto está estructurado para separar las responsabilidades, lo que facilita su mantenimiento y evolución:
 
-### Core Stack
-* ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white) **JDK 17**: Elegido por su soporte de registros y mejoras en rendimiento.
-* ![Spring](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white) **Spring Boot 3.x**: Para agilizar el desarrollo de microservicios.
+*   **`domain` (Dominio):** Contiene la lógica de negocio pura y el núcleo de la aplicación (`Cliente`, `Fondo`, `Transaccion`). Aquí residen los **Puertos** (interfaces) que definen cómo el dominio interactúa con el mundo exterior. No tiene dependencias de infraestructura ni de Spring (framework agnóstico).
+*   **`application` (Aplicación):** Contiene los casos de uso (`AdministracionFondosService`). Orquesta la lógica llamando al dominio y usando los puertos inyectados.
+*   **`infrastructure` (Infraestructura):** Capa externa que contiene los **Adaptadores**. Aquí se implementan los controladores REST (APIs), la conexión a MongoDB (`SpringDataMongoRepository`), y cualquier configuración propia de Spring Boot o librerías externas.
 
-### Infraestructura y DevOps
-* ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) **Docker**: Containerización de servicios.
-*  **AWS**: Para desplegar los microservicios en la nube.
+---
 
-## 2 - Diseño de datos NoSQL que soportan operaciones
+## 🛡️ Prevención de Doble Gasto (Control de Concurrencia)
 
-* Coleción cliente
-  ```json
-    {
-    "_id": "uuid-cliente-001",
-    "nombre": "Jhon Cardona",
-    "saldoDisponible": 500000.0,
-    "preferenciaNotificacion": "EMAIL",
-    "fondosSuscritos": [
-    "1", "3"
-    ]
-    }
+Uno de los retos principales resueltos en esta API es la **prevención de doble gasto** cuando dos peticiones concurrentes intentan suscribirse a un fondo al mismo tiempo con un saldo justo al límite.
 
+Esto se solucionó implementando **Optimistic Locking (Bloqueo Optimista)** de Spring Data MongoDB mediante la anotación `@Version`. 
+Si dos hilos leen el mismo saldo y tratan de actualizarlo simultáneamente, el primer hilo incrementará la versión en la base de datos. El segundo hilo será rechazado instantáneamente con un `OptimisticLockingFailureException`, protegiendo la integridad financiera del cliente.
 
-* Coleción fondos
-  ```json
-  {
-  "_id": "1", 
-  "nombre": "FPV_BTG_PACTUAL_RECAUDADORA",
-  "montoMinimo": 75000.0,
-  "categoria": "FPV"
-  }
+*(Existe un test de integración dedicado en `AdministracionFondosServiceConcurrencyTest.java` que demuestra esta protección).*
 
-* Coleción transacciones
-   ```json
-  {
-  "_id": "uuid-transaccion-101",
-  "clienteId": "uuid-cliente-001",
-  "fondoId": "1",
-  "tipoTransaccion": "APERTURA", // Puede ser "APERTURA" o "CANCELACION"
-  "monto": 75000.0,
-  "fecha": "2026-03-17T20:26:54Z"
-  }
+---
 
-## 
+## 🐳 Inicialización del Entorno (Base de Datos)
 
-## Inicialización de Datos (Seed Data)
+El proyecto incluye un entorno Dockerizado listo para usarse, el cual inserta datos semilla ("sembrados") al arrancar por primera vez.
 
-Para que la aplicación funcione correctamente desde el inicio, es necesario poblar la base de datos con el catálogo de fondos disponibles y crear un usuario de prueba.
+### 1. Levantar MongoDB
+Asegúrate de estar en el directorio del proyecto donde se encuentra `docker-compose.yml` (`/fondos`) y ejecuta:
 
-Puedes ejecutar los siguientes comandos directamente en la consola de tu cliente MongoDB (como MongoDB Compass, mongosh, o desde Mongo Express en `http://localhost:8081`).
+```bash
+docker-compose up -d
+```
 
-### 1. Seleccionar la base de datos
-    use btg_fondos_db;
-### 2. Insertar fondos    
-    db.fondos.insertMany([
-      {
-        "_id": "1",
-        "nombre": "FPV_BTG_PACTUAL_RECAUDADORA",
-        "montoMinimo": 75000.0,
-        "categoria": "FPV"
-      },
-      {
-        "_id": "2",
-        "nombre": "FPV_BTG_PACTUAL_ECOPETROL",
-        "montoMinimo": 125000.0,
-        "categoria": "FPV"
-      },
-      {
-        "_id": "3",
-        "nombre": "DEUDAPRIVADA",
-        "montoMinimo": 50000.0,
-        "categoria": "FIC"
-      },
-      {
-        "_id": "4",
-        "nombre": "FDO-ACCIONES",
-        "montoMinimo": 250000.0,
-        "categoria": "FIC"
-      },
-      {
-        "_id": "5",
-        "nombre": "FPV_BTG_PACTUAL_DINAMICA",
-        "montoMinimo": 100000.0,
-        "categoria": "FPV"
-      }
-    ]);
-### 3. Insertar insertar usuario de prueba    
-    db.clientes.insertOne({
-      "_id": "cliente-prueba-001",
-      "nombre": "Usuario BTG",
-      "saldoDisponible": 500000.0,
-      "preferenciaNotificacion": "EMAIL",
-      "fondosSuscritos": []
-    });
+### 2. Reiniciar los datos semilla (Troubleshooting)
+El archivo `docker-config/mongodb/mongo-init.js` contiene datos iniciales (Clientes y Fondos). **Este archivo solo se ejecuta si el volumen de la base de datos está vacío.**
+Si hiciste cambios estructurales o quieres limpiar la BD a su estado original, debes destruir el volumen de Docker:
 
+```bash
+# 1. Detener los contenedores y borrar el volumen huérfano persistente
+docker-compose down -v
 
-## Despliegue en AWS (CloudFormation)
+# 2. Levantar los contenedores nuevamente (esto leerá el mongo-init.js)
+docker-compose up -d
+```
 
-[cite_start]La infraestructura de este proyecto está definida como código utilizando AWS CloudFormation, lo que permite un despliegue automatizado, predecible y escalable.
+**Datos Semilla por defecto:**
+*   **Clientes**: Identificadores `1000000001`, `1000000002`, `1000000003` con saldos base de `$500,000`.
+*   **Fondos**: FPVs y FICs con IDs `1`, `2`, `3`, `4`, `5` y montos mínimos variados (ej. `$75,000`, `$250,000`).
 
-La plantilla `cloudformation-template.yaml` aprovisiona una instancia Amazon EC2 (`t2.micro` por defecto para capa gratuita) configurada con un *Security Group* que expone el puerto 8080 para la API REST. Además, utiliza `UserData` para instalar automáticamente el motor de Docker y Docker Compose en el arranque del servidor.
+---
 
-### Pasos para el despliegue:
+## ⚙️ Configuración y Ejecución de la API
 
-1. Inicia sesión en la **Consola de Administración de AWS**.
-2. Navega al servicio **CloudFormation**.
-3. Haz clic en **Crear pila (Create stack)** y selecciona "Con recursos nuevos (estándar)".
-4. Selecciona **Cargar un archivo de plantilla (Upload a template file)** y sube el archivo `cloudformation-template.yaml` ubicado en la raíz de este repositorio.
-5. Asigna un nombre a la pila (por ejemplo: `btg-fondos-stack`).
-6. En la sección de parámetros, puedes mantener el `InstanceType` por defecto (`t2.micro`).
-7. Haz clic en **Siguiente** hasta llegar a la pantalla final y presiona **Enviar (Submit)**.
-8. Espera a que el estado de la pila cambie a `CREATE_COMPLETE`.
-9. Ve a la pestaña **Salidas (Outputs)** de la pila. Allí encontrarás la clave `ApiUrl` con el enlace público para probar los endpoints de la API desplegada.
-10
+La aplicación está configurada para ejecutarse bajo el puerto `8086` con el context-path `/btg`.
+
+### Compilar y probar:
+```bash
+./mvnw clean install
+```
+*(Nota: El comando ejecuta los tests y comprueba la concurrencia. Si prefieres omitir los tests usa `./mvnw clean install -DskipTests`)*
+
+### Ejecutar la aplicación:
+```bash
+./mvnw spring-boot:run
+```
+
+---
+
+## 📖 Documentación de la API (Swagger)
+
+Una vez que la aplicación esté corriendo, puedes interactuar con los endpoints sin necesidad de Postman mediante la interfaz de Swagger UI.
+
+*   **Swagger UI:** [http://localhost:8086/btg/swagger-ui/index.html](http://localhost:8086/btg/swagger-ui/index.html)
+*   **OpenAPI JSON:** [http://localhost:8086/btg/v3/api-docs](http://localhost:8086/btg/v3/api-docs)
+
+---
+
+## 🛠️ Mejoras Futuras
+
+*   **Seguridad Stateless (JWT):** Implementación de Spring Security con tokens JWT en la capa de infraestructura para proteger los endpoints, excluyendo únicamente el Swagger UI y el path de autenticación.
+*   **Mensajería Asíncrona:** Desacoplar el envío real de notificaciones (Email/SMS) mediante una cola de mensajes (ej. AWS SQS o RabbitMQ - Kafka) para evitar bloquear el hilo principal durante la respuesta HTTP.
+*   **Monitoreo de los apis:** Mediante el uso de herramientas como Prometheus y Grafana.
+
+---
