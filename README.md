@@ -190,18 +190,20 @@ categoria: 'FPV'
            * 3. Se debe abrir la terminal y ejecutar los siguientes comandos, parado desde la raiz del repositorio: 
              * Ejecucion del docker-compose
                ```bash
-               cd fondos && docker-compose up -d --build
+               cd fondos && docker-compose up --build -d
                ```
            * 4. Verificar el funcionamiento del API, ver punto *Documentación de la API (Swagger)* o desde Postman importando el archivo [pruebas_funcionales.postman_collection.json](pruebas_funcionales.postman_collection.json).    
       *    **AWS CloudFormation**;
-           * La plantilla `cloudformation-template.yaml` aprovisiona una instancia Amazon EC2 (`t2.micro` por defecto para capa gratuita) configurada con un *Security Group* que expone el puerto 8080 para la API REST. Además, utiliza `UserData` para instalar automáticamente el motor de Docker y Docker Compose en el arranque del servidor.
+           * La plantilla `cloudformation-template.yaml` aprovisiona una instancia Amazon EC2 (`t3.small` por defecto para capa gratuita) configurada con un *Security Group* que expone el puerto 8080 para la API REST. Además, utiliza `UserData` para instalar automáticamente el motor de Docker y Docker Compose en el arranque del servidor.
              * Pasos para el despliegue:
                * 1. Inicia sesión en la **Consola de Administración de AWS**.
                * 2. Navega al servicio **CloudFormation**.
-               * 3. Haz clic en **Crear pila (Create stack)** y selecciona "Con recursos nuevos (estándar)".
-               * 4. Selecciona **Cargar un archivo de plantilla (Upload a template file)** y sube el archivo `cloudformation-template.yaml` ubicado en la raíz de este repositorio.
-               * 5. Asigna un nombre a la pila (por ejemplo: `btg-fondos-stack`).
-               * 6. En la sección de parámetros, puedes mantener el `InstanceType` por defecto (`t2.micro`).
+               * 3. Haz clic en **Crear pila (Create stack)**, aquí debe estar seleccionado **Seleccione una plantilla existente**.
+               * 4. Selecciona **Cargar un archivo de plantilla (Upload a template file)** y sube el archivo `cloudformation-template.yaml` ubicado en la raíz de este repositorio, luego da clic en **Ver en Infraestructura Composer**.
+               * 5. Verifica que la plantilla corresponda y lugo da clic sobre el boton **Validar**, este se pone de color verde, luego da clic sobre el boton **Crear plantilla**, esto desplega un modal de confirmacion, y finalmente clic sobre **Confirmar y continuar con CloudFormation**.
+               * 6. Aqui regresamos de nuevo a la pagina de **Crear pila**, en donde se debe dar clic sobre el boton **Siguiente**.
+               * 7. Asigna un nombre a la pila (por ejemplo: `btg-fondos-stack`).
+               * 8. En la sección de parámetros, puedes mantener el `InstanceType` por defecto (`t3.small`).
                * 7. Haz clic en **Siguiente** hasta llegar a la pantalla final y presiona **Enviar (Submit)**.
                * 8. Espera a que el estado de la pila cambie a `CREATE_COMPLETE`.
                * 9. Ve a la pestaña **Salidas (Outputs)** de la pila. Allí encontrarás la clave `ApiUrl` con el enlace público para probar los endpoints de la API desplegada.
@@ -212,3 +214,10 @@ categoria: 'FPV'
 
 *   **1. Se crea la BD y las tablas** (Ver archivo [db_postgres.sql](db_postgres.sql)) en una base de datos Postgres con el fin de validar la consulta.
 *   **2. SQL con la consulta requerida** (Ver archivo [parte2_consulta.sql](parte2_consulta.sql)), en este archivo he creado 2 consultas, la ultima un poco mejorada para rendimiento.
+
+---
+
+## ️ Notas Adicionales.
+
+*   **Ingresar a Mongo Express** : El ingreso es por la url [http://localhost:8081/](http://localhost:8081/), donde localhost y el puerto corresponde al configurado en [docker-compose.yml](fondos/docker-compose.yml). Aquí puede ingresar de forma grafica mongoDB.
+    * El usuario de ingreso es: **admin** y la contraseña es **pass** ó **password**'

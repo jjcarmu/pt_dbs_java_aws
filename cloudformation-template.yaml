@@ -1,62 +1,107 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'BTG Pactual - Despliegue de API REST de Fondos en EC2 con Docker'
+Description: 'BTG Pactual - Despliegue de API REST de Fondos en EC2 usando Docker Compose'
 
 Parameters:
   InstanceType:
-    Description: Tipo de instancia EC2 para el despliegue.
+    Description: Tipo de instancia EC2. Se recomienda t3.small o superior para compilar Java/Maven en Docker sin quedarse sin RAM.
     Type: String
-    Default: t2.micro
+    Default: t3.small
     AllowedValues:
       - t2.micro
       - t3.micro
       - t3.small
+      - t3.medium
+  GitRepositoryUrl:
+    Description: URL HTTP/HTTPS del repositorio Git público que contiene el proyecto.
+    Type: String
+    Default: "https://github.com/jjcarmu/pt_dbs_java_aws.git" # Cambia esto por tu URL real
 
 Resources:
   # 1. Grupo de Seguridad (Firewall)
   BtgSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Habilitar acceso HTTP al puerto 8080 (Spring Boot) y 22 (SSH)
+      GroupDescription: Habilitar acceso a la API (8086), Mongo Express (8081) y SSH (22)
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 8080
-          ToPort: 8080
+          FromPort: 8086
+          ToPort: 8086
           CidrIp: 0.0.0.0/0
+          Description: "Acceso publico a la API Spring Boot"
+        - IpProtocol: tcp
+          FromPort: 8081
+          ToPort: 8081
+          CidrIp: 0.0.0.0/0
+          Description: "Acceso a la consola Mongo Express (Opcional/Admin)"
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
           CidrIp: 0.0.0.0/0
+          Description: "Acceso SSH para administracion"
 
   # 2. Instancia EC2 (Servidor)
   BtgBackendInstance:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
-      ImageId: ami-0c55b159cbfafe1f0 # Amazon Linux 2 AMI (us-east-2) - Ajustar segun tu region
+      # Usa SSM para obtener dinámicamente la última AMI de Amazon Linux 2 en la región actual (¡Esto evita el error 400!)
+      ImageId: '{{resolve:ssm:/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2}}'
       SecurityGroups:
         - !Ref BtgSecurityGroup
       Tags:
         - Key: Name
           Value: BTG-Fondos-Backend
-      # Script de inicialización (Instala Docker, clona tu repo/imagen y lo ejecuta)
+          
+      # Script de inicialización (Instala Docker, clona tu repo y levanta el stack)
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
+          # 1. Actualizar e instalar dependencias base
           yum update -y
+          yum install -y git
           amazon-linux-extras install docker -y
+          
+          # 2. Configurar e iniciar Docker
           service docker start
           usermod -a -G docker ec2-user
           chkconfig docker on
-          curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          chmod +x /usr/local/bin/docker-compose
           
-          # Aquí irían los comandos para descargar tu imagen de Spring Boot y levantar el docker-compose.yml
-          # Ejemplo: 
-          # mkdir /app && cd /app
-          # wget [URL_RAW_DE_TU_DOCKER_COMPOSE]
-          # docker-compose up -d
+          # 3. Instalar Docker Compose v2 y Buildx
+          mkdir -p /usr/local/lib/docker/cli-plugins
+          
+          # Instalar Docker Buildx (Requisito de Compose v2 para compilar)
+          curl -SL https://github.com/docker/buildx/releases/download/v0.17.1/buildx-v0.17.1.linux-amd64 -o /usr/local/lib/docker/cli-plugins/docker-buildx
+          chmod +x /usr/local/lib/docker/cli-plugins/docker-buildx
+          
+          # Instalar Docker Compose v2
+          curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m) -o /usr/local/lib/docker/cli-plugins/docker-compose
+          chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+          
+          # Crear enlace simbólico para que el comando "docker-compose" tradicional funcione
+          ln -s /usr/local/lib/docker/cli-plugins/docker-compose /usr/local/bin/docker-compose
+          ln -s /usr/local/lib/docker/cli-plugins/docker-compose /usr/bin/docker-compose
+          
+          # 4. Clonar el repositorio
+          mkdir -p /app
+          cd /app
+          git clone ${GitRepositoryUrl} repo
+          cd repo/fondos
+          
+          # 5. Preparar el entorno y levantar el stack
+          cp docker-compose.yml.docker docker-compose.yml
+          cp .env.example .env
+          cp src/main/resources/application-dev.properties.docker src/main/resources/application-dev.properties
+          
+          # Deshabilitar BUILDKIT por seguridad extra en Amazon Linux, aunque ya instalamos buildx
+          DOCKER_BUILDKIT=0 docker-compose up --build -d
 
 Outputs:
   ApiUrl:
-    Description: "URL pública para acceder a la API de Fondos BTG"
-    Value: !Sub "http://${BtgBackendInstance.PublicDnsName}:8080/api/v1/clientes/cliente-prueba-001/fondos/transacciones"
+    Description: "URL pública para acceder API"
+    Value: !Sub "http://${BtgBackendInstance.PublicDnsName}:8086/btg/api/v1/clientes"
+  ApiUrlSwagger:
+    Description: "URL pública para acceder al Swagger de la API"
+    Value: !Sub "http://${BtgBackendInstance.PublicDnsName}:8086/btg/swagger-ui/index.html"
+  MongoExpressUrl:
+    Description: "URL pública para administrar MongoDB visualmente"
+    Value: !Sub "http://${BtgBackendInstance.PublicDnsName}:8081"
