@@ -206,7 +206,8 @@ categoria: 'FPV'
                * 8. En la sección de parámetros, puedes mantener el `InstanceType` por defecto (`t3.small`).
                * 7. Haz clic en **Siguiente** hasta llegar a la pantalla final y presiona **Enviar (Submit)**.
                * 8. Espera a que el estado de la pila cambie a `CREATE_COMPLETE`.
-               * 9. Ve a la pestaña **Salidas (Outputs)** de la pila. Allí encontrarás la clave `ApiUrl` con el enlace público para probar los endpoints de la API desplegada.
+               * 9. Ve a la pestaña **Salidas (Outputs)** de la pila. Allí encontrarás la clave `ApiUrl` con el enlace público para probar los endpoints de la API desplegada, `ApiUrlSwagger` enlace de Swagger para verificar los servicios del API y `MongoExpressUrl` enlace con entorno gráfico para administrar MongoDB.
+               * 10. Para la verificación del API por Postman, desde AWS CloudFormation se debe copiar desde la pestaña **Salidad** el `ApiUrl`, luego abrir Postman e importar desde la raiz del repositorio el archivo `pruebas_funcionales.postman_collection.json`, y modificar el valor de la variable `awsAPI` con el valor copiando de `ApiUrl`.  
 
 ---
 

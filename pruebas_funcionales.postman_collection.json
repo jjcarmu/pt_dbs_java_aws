@@ -44,15 +44,11 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseIp}}/btg/api/v1/clientes/{{clienteId}}/fondos/transacciones",
+					"raw": "{{awsAPI}}/{{clienteId}}/fondos/transacciones",
 					"host": [
-						"{{baseIp}}"
+						"{{awsAPI}}"
 					],
 					"path": [
-						"btg",
-						"api",
-						"v1",
-						"clientes",
 						"{{clienteId}}",
 						"fondos",
 						"transacciones"
@@ -99,15 +95,11 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseIp}}/btg/api/v1/clientes/all",
+					"raw": "{{awsAPI}}/all",
 					"host": [
-						"{{baseIp}}"
+						"{{awsAPI}}"
 					],
 					"path": [
-						"btg",
-						"api",
-						"v1",
-						"clientes",
 						"all"
 					]
 				}
@@ -152,16 +144,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseIp}}/btg/api/v1/clientes/1000000001/id",
+					"raw": "{{awsAPI}}/{{clienteId}}/id",
 					"host": [
-						"{{baseIp}}"
+						"{{awsAPI}}"
 					],
 					"path": [
-						"btg",
-						"api",
-						"v1",
-						"clientes",
-						"1000000001",
+						"{{clienteId}}",
 						"id"
 					]
 				},
@@ -204,15 +192,11 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseIp}}/btg/api/v1/clientes/{{clienteId}}/fondos/suscribir",
+					"raw": "{{awsAPI}}/{{clienteId}}/fondos/suscribir",
 					"host": [
-						"{{baseIp}}"
+						"{{awsAPI}}"
 					],
 					"path": [
-						"btg",
-						"api",
-						"v1",
-						"clientes",
 						"{{clienteId}}",
 						"fondos",
 						"suscribir"
@@ -257,15 +241,11 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseIp}}/btg/api/v1/clientes/{{clienteId}}/fondos/cancelar",
+					"raw": "{{awsAPI}}/{{clienteId}}/fondos/cancelar",
 					"host": [
-						"{{baseIp}}"
+						"{{awsAPI}}"
 					],
 					"path": [
-						"btg",
-						"api",
-						"v1",
-						"clientes",
 						"{{clienteId}}",
 						"fondos",
 						"cancelar"
@@ -300,21 +280,33 @@
 	],
 	"variable": [
 		{
-			"id": "5f6a333d-2c99-4a87-8af5-82be794b7143",
+			"id": "b11c8b01-d6e0-40e1-ae11-e0b80645a09c",
 			"key": "baseUrl",
 			"value": "http://localhost:8086/btg/api/v1/clientes/",
 			"type": "string"
 		},
 		{
-			"id": "8cb9264f-bd04-4f92-a933-3c22b0a5bdfd",
+			"id": "c57348bf-66fa-4be1-ad09-2310dae56248",
 			"key": "baseIp",
 			"value": "http://localhost:8086",
 			"type": "string"
 		},
 		{
-			"id": "3d1c182f-54f2-42ad-a260-bca392cb2d0e",
+			"id": "d9800cdc-2550-4a84-83d5-20608fe86b77",
 			"key": "clienteId",
 			"value": "1000000001",
+			"type": "string"
+		},
+		{
+			"id": "761c24fd-2d71-44e9-b167-cffda99d2401",
+			"key": "awsIP",
+			"value": "http://ec2-98-92-23-156.compute-1.amazonaws.com:8086",
+			"type": "string"
+		},
+		{
+			"id": "4a9e0533-61aa-4c27-834c-7cf6a447c8e0",
+			"key": "awsAPI",
+			"value": "http://ec2-98-92-23-156.compute-1.amazonaws.com:8086/btg/api/v1/clientes",
 			"type": "string"
 		}
 	],
