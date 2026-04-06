@@ -36,7 +36,7 @@ Si dos hilos leen el mismo saldo y tratan de actualizarlo simultáneamente, el p
 
 ---
 
-## 🐳 Inicialización del Entorno (Base de Datos)
+## 🐳 Inicialización del Entorno (Base de Datos) - Cuidado, Ver primero **5. Despliegue**
 
 El proyecto incluye un entorno Dockerizado listo para usarse, el cual inserta datos semilla ("sembrados") al arrancar por primera vez.
 
@@ -65,7 +65,7 @@ docker-compose up -d
 
 ---
 
-## ⚙️ Configuración y Ejecución de la API
+## ⚙️ Configuración y Ejecución de la API  - Cuidado, Ver primero **5. Despliegue**
 
 La aplicación está configurada para ejecutarse bajo el puerto `8086` con el context-path `/btg`.
 
@@ -220,5 +220,5 @@ categoria: 'FPV'
 
 ## ️ Notas Adicionales.
 
-*   **Ingresar a Mongo Express** : El ingreso es por la url [http://localhost:8081/](http://localhost:8081/), donde localhost y el puerto corresponde al configurado en [docker-compose.yml](fondos/docker-compose.yml). Aquí puede ingresar de forma grafica mongoDB.
+*   **Ingresar a Mongo Express** : El ingreso es por la url [http://localhost:8081/](http://localhost:8081/), donde localhost y el puerto corresponde al configurado en [docker-compose.yml](fondos/docker-compose.yml), pero para AWS debe ingresar por la `ApiUrlSwagger` generada en la **Salida**. Aquí puede ingresar de forma gráfica mongoDB.
     * El usuario de ingreso es: **admin** y la contraseña es **pass** ó **password**'
